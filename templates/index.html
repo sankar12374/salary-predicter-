@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Salary Prediction App</h2>
+        <form id="salary-form">
+            <label for="age">Enter Age:</label>
+            <input type="number" id="age" name="age" required>
+            
+            <label for="job_role">Enter Job Role:</label>
+            <input type="text" id="job_role" name="job_role" required>
+            
+            <button type="submit">Predict Salary</button>
+        </form>
+
+        <h3 id="result"></h3>
+    </div>
+
+    <script>
+        document.getElementById("salary-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(this);
+
+            fetch("/predict", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("result").innerText = "❌ " + data.error;
+                } else {
+                    document.getElementById("result").innerText = "💰 Predicted Salary for the person: " + data.salary;
+                }
+            })
+            .catch(error => console.log(error));
+        });
+    </script>
+</body>
+</html>
