@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Four Solids</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #ddd;
+            position: relative;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            position: absolute;
+        }
+
+        .solid {
+            background-color: steelblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .message-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="solid" data-index="0"></div>
+        <div class="solid" data-index="1"></div>
+        <div class="solid" data-index="2"></div>
+        <div class="solid" data-index="3"></div>
+    </div>
+
+    <div class="message-box">Hello! You unlocked me!</div>
+
+    <script>
+        const solids = document.querySelectorAll(".solid");
+        const messageBox = document.querySelector(".message-box");
+        let clickedCount = 0;
+        let isOpen = [false, false, false, false]; // Track each block's state
+
+        // Movement positions for each block
+        const movePositions = [
+            { x: "-10%", y: "-10%" }, // Top-left
+            { x: "10%", y: "-10%" },  // Top-right
+            { x: "-10%", y: "10%" },  // Bottom-left
+            { x: "10%", y: "10%" }    // Bottom-right
+        ];
+
+        solids.forEach((solid, index) => {
+            solid.addEventListener("click", () => {
+                if (!isOpen[index]) {
+                    // Move the clicked block
+                    gsap.to(solid, {
+                        x: movePositions[index].x,
+                        y: movePositions[index].y,
+                        duration: 0.3
+                    });
+
+                    isOpen[index] = true;
+                    clickedCount++;
+                } else {
+                    // Move back to original position
+                    gsap.to(solid, { x: "0%", y: "0%", duration: 0.3 });
+
+                    isOpen[index] = false;
+                    clickedCount--;
+                }
+
+                // Show the message box when all blocks are moved
+                if (clickedCount === 4) {
+                    gsap.to(messageBox, { opacity: 1, duration: 0.5 });
+                } else {
+                    gsap.to(messageBox, { opacity: 0, duration: 0.5 });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

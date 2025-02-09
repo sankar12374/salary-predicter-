@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falling Rocks Animation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            background-color: #87CEEB; /* Sky color */
+            overflow: hidden;
+            margin: 0;
+            position: relative;
+            height: 100vh;
+        }
+
+        .rock {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: gray;
+            border-radius: 50%;
+            top: -50px; /* Start above the page */
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        // Function to create multiple rocks
+        function createRocks(numRocks) {
+            for (let i = 0; i < numRocks; i++) {
+                let rock = document.createElement("div");
+                rock.classList.add("rock");
+                document.body.appendChild(rock);
+
+                let randomX = Math.random() * window.innerWidth; // Random horizontal position
+                let randomDelay = Math.random() * 2; // Random delay before falling
+                let randomSpeed = 2 + Math.random() * 3; // Random falling speed
+
+                // Set initial position
+                rock.style.left = `${randomX}px`;
+
+                // GSAP animation for falling effect
+                gsap.to(rock, {
+                    y: window.innerHeight + 50, // Move rock to the bottom
+                    duration: randomSpeed, // Different speeds
+                    delay: randomDelay, // Staggered drops
+                    ease: "power1.in", // Natural falling effect
+                    onComplete: () => rock.remove() // Remove after falling
+                });
+            }
+        }
+
+        // Call function to create rocks
+        createRocks(10); // Change number of rocks as needed
+    </script>
+
+</body>
+</html>

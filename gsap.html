@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP Animation Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            position: relative;
+            margin: 50px auto;
+            border-radius: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>GSAP Animation Test</h2>
+    <div class="box"></div>
+    <button id="animateBtn">Animate Box</button>
+
+    <script>
+        // Select the box
+        const box = document.querySelector(".box");
+
+        // GSAP animation function
+        function animateBox() {
+            gsap.to(box, {
+                x: 200,         // Move 200px to the right
+                rotation: 360,  // Rotate 360 degrees
+                scale: 1.5,     // Scale up by 1.5 times
+                backgroundColor: "red", // Change color to red
+                duration: 2,    // Animation duration in seconds
+                ease: "bounce.out" // Smooth bounce effect
+            });
+        }
+
+        // Attach event listener to button
+        document.getElementById("animateBtn").addEventListener("click", animateBox);
+    </script>
+
+</body>
+</html>

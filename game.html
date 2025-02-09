@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airplane Dodge Challenge</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: skyblue;
+            overflow: hidden;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-top: 10px;
+            font-size: 24px;
+            color: white;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100vw;
+            height: 80vh;
+            overflow: hidden;
+            border-bottom: 5px solid #fff;
+        }
+
+        .airplane {
+            position: absolute;
+            width: 80px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+
+        .cloud {
+            position: absolute;
+            width: 80px;
+            height: 50px;
+            background: white;
+            border-radius: 50px;
+            box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .scoreboard {
+            font-size: 20px;
+            color: white;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Airplane Dodge Challenge ✈️</h1>
+    <div class="scoreboard">Score: <span id="score">0</span></div>
+    <div class="game-container">
+        <img src="R.png" class="airplane" id="airplane">
+    </div>
+
+    <script>
+        let airplane = document.getElementById("airplane");
+        let gameContainer = document.querySelector(".game-container");
+        let scoreDisplay = document.getElementById("score");
+        let score = 0;
+        let gameRunning = true;
+
+        // Move airplane based on mouse movement (Full movement - X and Y)
+        document.addEventListener("mousemove", (event) => {
+            if (!gameRunning) return;
+
+            let mouseX = event.clientX;
+            let mouseY = event.clientY;
+
+            gsap.to(airplane, {
+                x: mouseX - window.innerWidth / 2, 
+                y: mouseY - window.innerHeight / 2,
+                duration: 0.2,
+                ease: "power2.out"
+            });
+        });
+
+        // Function to create falling clouds (obstacles)
+        function createCloud() {
+            if (!gameRunning) return;
+            
+            let cloud = document.createElement("div");
+            cloud.classList.add("cloud");
+            cloud.style.left = Math.random() * (window.innerWidth - 80) + "px";
+            cloud.style.top = "-50px";
+            gameContainer.appendChild(cloud);
+
+            // Animate cloud falling
+            gsap.to(cloud, {
+                y: window.innerHeight,
+                duration: 4,
+                ease: "linear",
+                onUpdate: () => checkCollision(cloud),
+                onComplete: () => {
+                    if (gameRunning) {
+                        cloud.remove();
+                        score++;
+                        scoreDisplay.textContent = score;
+                    }
+                }
+            });
+
+            setTimeout(createCloud, Math.random() * 2000 + 1000); // Spawn new clouds randomly
+        }
+
+        // Collision Detection
+        function checkCollision(cloud) {
+            let cloudRect = cloud.getBoundingClientRect();
+            let planeRect = airplane.getBoundingClientRect();
+
+            if (
+                planeRect.left < cloudRect.right &&
+                planeRect.right > cloudRect.left &&
+                planeRect.top < cloudRect.bottom &&
+                planeRect.bottom > cloudRect.top
+            ) {
+                gameOver();
+            }
+        }
+
+        // Game Over
+        function gameOver() {
+            gameRunning = false;
+            alert("💥 Game Over! Final Score: " + score);
+            location.reload(); // Restart game
+        }
+
+        // Start game
+        createCloud();
+    </script>
+
+</body>
+</html>

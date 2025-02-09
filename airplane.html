@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travelo - Flight Animation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            overflow: hidden;
+            padding-top: 50px;
+        }
+
+        .header {
+            position: relative;
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 50px;
+        }
+
+        .plane {
+            position: absolute;
+            width: 80px;
+            top: -50px;
+            left: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="R.png" class="plane" id="plane">
+        TRAVELO
+    </div>
+
+    <script>
+        gsap.registerPlugin(MotionPathPlugin);
+
+        function animateFlight() {
+            gsap.fromTo("#plane",
+                {
+                    x: -100,
+                    y: 30,
+                    opacity: 1
+                },
+                {
+                    motionPath: {
+                        path: [{ x: 150, y: -30 }, { x: 350, y: 20 }, { x: 600, y: -20 }, { x: window.innerWidth, y: -50 }],
+                        curviness: 1.5,
+                        autoRotate: true
+                    },
+                    duration: 3,
+                    ease: "power1.inOut"
+                }
+            );
+        }
+
+        // Run once on page load
+        window.onload = animateFlight;
+
+        // Repeat animation when clicking the plane
+        document.getElementById("plane").addEventListener("click", animateFlight);
+    </script>
+
+</body>
+</html>

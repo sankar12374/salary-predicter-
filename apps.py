@@ -14,7 +14,6 @@ df = pd.read_csv("random_dataset.csv")
 label_encoder = LabelEncoder()
 df["Job Role"] = label_encoder.fit_transform(df["Job Role"])
 print("Recognized Job Roles:", label_encoder.classes_)
-
 # Store job roles dictionary for validation
 job_roles_dict = {job.lower(): job for job in label_encoder.classes_}
 
