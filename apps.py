@@ -13,6 +13,10 @@ df = pd.read_csv("random_dataset.csv")
 # Encode job roles
 label_encoder = LabelEncoder()
 df["Job Role"] = label_encoder.fit_transform(df["Job Role"])
+print("Recognized Job Roles:", label_encoder.classes_)
+
+# Store job roles dictionary for validation
+job_roles_dict = {job.lower(): job for job in label_encoder.classes_}
 
 app = Flask(__name__)
 
@@ -26,18 +30,16 @@ def predict():
         age = int(request.form["age"])
         job_role_input = request.form["job_role"].strip().lower()
 
-        # Convert Job Role to encoded value
-        job_roles_dict = {job.lower(): job for job in label_encoder.classes_}
-
+        # Convert job role input to correct format
         if job_role_input in job_roles_dict:
             job_encoded = label_encoder.transform([job_roles_dict[job_role_input]])[0]
         else:
-            return jsonify({"error": "Invalid job role. Try again!"})
+            return jsonify({"error": f"Invalid job role '{job_role_input}'. Try again!"})
 
         # Prepare input data
         new_data = np.array([[age, job_encoded]])
 
-        # Make prediction
+        # Make Prediction
         predicted_salary = model.predict(new_data)[0]
 
         return jsonify({"salary": f"{predicted_salary:,.2f} INR"})
